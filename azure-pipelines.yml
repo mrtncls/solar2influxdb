@@ -9,14 +9,14 @@ resources:
 - repo: self
 
 variables:
-  tag: '$(Build.BuildId)'
+  tag: '$(Build.BuildNumber)'
 
 stages:
 - stage: Build
   displayName: Build image
   jobs:
   - job: Build
-    displayName: Build
+    displayName: Build and push
     pool:
       vmImage: ubuntu-latest
     steps:

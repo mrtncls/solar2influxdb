@@ -49,7 +49,7 @@ namespace Solar2InfluxDB.Worker
                     influxClient.Write(solarClient.GetReactivePower());
                     influxClient.Write(solarClient.GetPowerMeterActivePower());
 
-                    logger.LogInformation("Measurements forwarded");
+                    logger.LogDebug("Measurements forwarded");
                 }
                 catch (Exception e)
                 {

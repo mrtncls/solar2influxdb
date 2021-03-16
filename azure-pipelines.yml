@@ -26,4 +26,6 @@ stages:
         repository: 'mrtncls/solar2influxdb'
         command: 'buildAndPush'
         Dockerfile: '$(Build.SourcesDirectory)/src/Dockerfile'
-        tags: '$(tag)'
+        tags: |
+          $(tag)
+          latest

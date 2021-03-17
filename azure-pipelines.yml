@@ -17,6 +17,19 @@ variables:
   tag: '$(Build.BuildNumber)'
 
 stages:
+- stage: Test
+  displayName: Test
+  jobs:
+  - job: Test
+    displayName: Run tests
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: 'test'
+        projects: '**/*.Tests.csproj'
+        testRunTitle: 'Unittests'
 - stage: Build
   displayName: Build image
   jobs:

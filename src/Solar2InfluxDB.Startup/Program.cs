@@ -2,15 +2,15 @@
 using System.IO;
 using LoggingAdvanced.Console;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Solar2InfluxDB.HuaweiSun2000;
 using Solar2InfluxDB.InfluxDB;
+using Solar2InfluxDB.Worker;
 
-namespace Solar2InfluxDB.Worker
+namespace Solar2InfluxDB.Startup
 {
-    class Program
+    static class Program
     {
         private const string SettingsFile = "appsettings.json";
         private const string ConfigPathInContainer = "/config/";
@@ -55,12 +55,12 @@ namespace Solar2InfluxDB.Worker
                     logging.ClearProviders();
                     logging.AddConsoleAdvanced(Configuration.GetSection("Logging"));
                 })
-                .ConfigureServices((hostContext, services) =>
+                .ConfigureServices(services =>
                 {
                     services
                         .AddHuaweiSun2000(Configuration)
                         .AddInfluxDB(Configuration)
-                        .AddHostedService<Worker>();
+                        .AddWorker(Configuration);
                 });
         }
 

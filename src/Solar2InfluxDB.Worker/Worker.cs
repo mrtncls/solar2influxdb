@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Solar2InfluxDB.HuaweiSun2000;
 using Solar2InfluxDB.InfluxDB;
+using Solar2InfluxDB.Model;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,51 +15,62 @@ namespace Solar2InfluxDB.Worker
         private readonly InfluxExportClient influxClient;
         private readonly ILogger<Worker> logger;
         private readonly CancellationTokenSource timerSource;
+        private readonly MeasurmentChangedTracker measurmentChangedTracker;
 
         private Task workerTask;
 
         public Worker(
             HuaweiSun2000Client solarClient,
             InfluxExportClient influxClient,
+            MeasurmentChangedTracker measurmentChangedTracker,
             ILogger<Worker> logger)
         {
             this.solarClient = solarClient;
             this.influxClient = influxClient;
             this.logger = logger;
             timerSource = new CancellationTokenSource();
+            this.measurmentChangedTracker = measurmentChangedTracker;
         }
 
         async Task IHostedService.StartAsync(CancellationToken cancellationToken)
         {
             await solarClient.Initialize();
 
-            workerTask = Task.Run(() => ForwardMeasurements());
+            workerTask = Task.Run(() => ProcessMeasurements());
 
             logger.LogInformation("Worker started");
         }
 
-        async Task ForwardMeasurements()
+        async Task ProcessMeasurements()
         {
             while (!timerSource.Token.IsCancellationRequested)
             {
                 try
                 {
-                    influxClient.Write(solarClient.GetRatedPower());
-                    influxClient.Write(solarClient.GetInputPower());
-                    influxClient.Write(solarClient.GetActivePower());
-                    influxClient.Write(solarClient.GetReactivePower());
-                    influxClient.Write(solarClient.GetPowerMeterActivePower());
+                    Process(solarClient.GetRatedPower());
+                    Process(solarClient.GetInputPower());
+                    Process(solarClient.GetActivePower());
+                    Process(solarClient.GetReactivePower());
+                    Process(solarClient.GetPowerMeterActivePower());
 
-                    logger.LogDebug("Measurements forwarded");
+                    logger.LogDebug("Measurements processed");
                 }
                 catch (Exception e)
                 {
-                    logger.LogError(e, $"Forwarding measurement failed: {e.GetBaseException().Message}");
+                    logger.LogError(e, $"Process measurement failed: {e.GetBaseException().Message}");
 
                     await solarClient.Initialize();
                 }
 
                 await Task.Delay(TimeSpan.FromSeconds(5), timerSource.Token);
+            }
+        }
+
+        private void Process<TValue>(Measurement<TValue> measurement)
+        {
+            if (measurmentChangedTracker.IsMeasurementChanged(measurement))
+            {
+                influxClient.Write(measurement);
             }
         }
 

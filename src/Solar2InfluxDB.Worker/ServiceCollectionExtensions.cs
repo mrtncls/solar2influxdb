@@ -8,7 +8,7 @@ namespace Solar2InfluxDB.Worker
         public static IServiceCollection AddWorker(this IServiceCollection services, IConfiguration configuration)
             => services
                 .Configure<WorkerConfig>(configuration.GetSection(WorkerConfig.ConfigSection))
-                .AddSingleton<MeasurmentChangedTracker>()
+                .AddSingleton<MeasurementChangedTracker>()
                 .AddHostedService<Worker>();
     }
 }

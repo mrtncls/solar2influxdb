@@ -11,7 +11,7 @@ namespace Solar2InfluxDB.HuaweiSun2000
         public static ushort GetModelID(this HuaweiSun2000Client client) => client.GetUnsignedShort(30070);
         public static ushort GetNumberOfPVStrings(this HuaweiSun2000Client client) => client.GetUnsignedShort(30071);
         public static ushort GetNumberOfMPPTrackers(this HuaweiSun2000Client client) => client.GetUnsignedShort(30072);
-        public static Measurement<double> GetRatedPower(this HuaweiSun2000Client client) => client.GetMeasurement("rated_power", (double)client.GetUnsignedInteger(30073) / 1000);
+        public static DoubleMeasurement GetRatedPower(this HuaweiSun2000Client client) => client.GetMeasurement("rated_power", (double)client.GetUnsignedInteger(30073) / 1000);
         public static double GetMaximumActivePower(this HuaweiSun2000Client client) => (double)client.GetUnsignedInteger(30075) / 1000;
         public static double GetMaximumApparentPower(this HuaweiSun2000Client client) => (double)client.GetUnsignedInteger(30077) / 1000;
         public static double GetMaximumReactivePowerToGrid(this HuaweiSun2000Client client) => (double)client.GetInteger(30079) / 1000;
@@ -22,7 +22,7 @@ namespace Solar2InfluxDB.HuaweiSun2000
 
         public static double GetPVVoltage(this HuaweiSun2000Client client, int PVString) => (double)client.GetShort(32014 + 2 * PVString) / 10;
         public static double GetPVCurrent(this HuaweiSun2000Client client, int PVString) => (double)client.GetShort(32015 + 2 * PVString) / 100;
-        public static Measurement<double> GetInputPower(this HuaweiSun2000Client client) => client.GetMeasurement("input_power", (double)client.GetInteger(32064) / 1000);
+        public static DoubleMeasurement GetInputPower(this HuaweiSun2000Client client) => client.GetMeasurement("input_power", (double)client.GetInteger(32064) / 1000);
         public static double GetLineVoltageAB(this HuaweiSun2000Client client) => (double)client.GetUnsignedShort(32066) / 10;
         public static double GetLineVoltageBC(this HuaweiSun2000Client client) => (double)client.GetUnsignedShort(32067) / 10;
         public static double GetLineVoltageCA(this HuaweiSun2000Client client) => (double)client.GetUnsignedShort(32068) / 10;
@@ -33,8 +33,8 @@ namespace Solar2InfluxDB.HuaweiSun2000
         public static double GetPhaseBCurrent(this HuaweiSun2000Client client) => (double)client.GetInteger(32074) / 1000;
         public static double GetPhaseCCurrent(this HuaweiSun2000Client client) => (double)client.GetInteger(32076) / 1000;
         public static double GetPeakActivePowerOfCurrentDay(this HuaweiSun2000Client client) => (double)client.GetInteger(32078) / 1000;
-        public static Measurement<double> GetActivePower(this HuaweiSun2000Client client) => client.GetMeasurement("active_power", (double)client.GetInteger(32080) / 1000);
-        public static Measurement<double> GetReactivePower(this HuaweiSun2000Client client) => client.GetMeasurement("reactive_power", (double)client.GetInteger(32082) / 1000);
+        public static DoubleMeasurement GetActivePower(this HuaweiSun2000Client client) => client.GetMeasurement("active_power", (double)client.GetInteger(32080) / 1000);
+        public static DoubleMeasurement GetReactivePower(this HuaweiSun2000Client client) => client.GetMeasurement("reactive_power", (double)client.GetInteger(32082) / 1000);
         public static double GetPowerFactor(this HuaweiSun2000Client client) => (double)client.GetShort(32084) / 1000;
         public static double GetGridFrequency(this HuaweiSun2000Client client) => (double)client.GetUnsignedShort(32085) / 100;
         public static double GetEfficiency(this HuaweiSun2000Client client) => (double)client.GetUnsignedShort(32086) / 100;
@@ -47,7 +47,7 @@ namespace Solar2InfluxDB.HuaweiSun2000
         public static int GetBatteryChargeAndDischargePower(this HuaweiSun2000Client client) => client.GetInteger(37001);
         public static double GetBatteryCurrentDayChargeCapacity(this HuaweiSun2000Client client) => (double)client.GetUnsignedInteger(37015) / 100;
         public static double GetBatteryCurrentDayDischargeCapacity(this HuaweiSun2000Client client) => (double)client.GetUnsignedInteger(37017) / 100;
-        public static Measurement<int> GetPowerMeterActivePower(this HuaweiSun2000Client client) => client.GetMeasurement("powermeter_active_power", client.GetInteger(37113));
+        public static IntegerMeasurement GetPowerMeterActivePower(this HuaweiSun2000Client client) => client.GetMeasurement("powermeter_active_power", client.GetInteger(37113));
         public static ushort GetNumberOfOptimizers(this HuaweiSun2000Client client) => client.GetUnsignedShort(37200);
         public static ushort GetNumberOfOnlineOptimizers(this HuaweiSun2000Client client) => client.GetUnsignedShort(37201);
 

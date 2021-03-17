@@ -24,7 +24,7 @@ namespace Solar2InfluxDB.InfluxDB
                 config.RetentionPolicy ?? "autogen");
         }
 
-        public void Write<TValue>(Measurement<TValue> measurement)
+        public void Write(Measurement measurement)
         {
             using (var writeApi = client.GetWriteApi())
             {

@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Solar2InfluxDB.InfluxDB", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Solar2InfluxDB.Model", "Solar2InfluxDB.Model\Solar2InfluxDB.Model.csproj", "{47A1B8C1-5AE0-438C-B793-87C50D97557B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Solar2InfluxDB.Worker", "Solar2InfluxDB.Worker\Solar2InfluxDB.Worker.csproj", "{76914424-E566-4AF3-AE06-4171353DDE58}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Solar2InfluxDB.Worker", "Solar2InfluxDB.Worker\Solar2InfluxDB.Worker.csproj", "{76914424-E566-4AF3-AE06-4171353DDE58}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Solar2InfluxDB.Worker.Tests", "Solar2InfluxDB.Worker.Tests\Solar2InfluxDB.Worker.Tests.csproj", "{B45A7503-5223-45DB-80DE-95EDAC909D7B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{76914424-E566-4AF3-AE06-4171353DDE58}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{76914424-E566-4AF3-AE06-4171353DDE58}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{76914424-E566-4AF3-AE06-4171353DDE58}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B45A7503-5223-45DB-80DE-95EDAC909D7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B45A7503-5223-45DB-80DE-95EDAC909D7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B45A7503-5223-45DB-80DE-95EDAC909D7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B45A7503-5223-45DB-80DE-95EDAC909D7B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

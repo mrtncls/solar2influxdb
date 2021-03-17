@@ -15,14 +15,14 @@ namespace Solar2InfluxDB.Worker
         private readonly InfluxExportClient influxClient;
         private readonly ILogger<Worker> logger;
         private readonly CancellationTokenSource timerSource;
-        private readonly MeasurmentChangedTracker measurmentChangedTracker;
+        private readonly MeasurementChangedTracker measurmentChangedTracker;
 
         private Task workerTask;
 
         public Worker(
             HuaweiSun2000Client solarClient,
             InfluxExportClient influxClient,
-            MeasurmentChangedTracker measurmentChangedTracker,
+            MeasurementChangedTracker measurmentChangedTracker,
             ILogger<Worker> logger)
         {
             this.solarClient = solarClient;
@@ -66,7 +66,7 @@ namespace Solar2InfluxDB.Worker
             }
         }
 
-        private void Process<TValue>(Measurement<TValue> measurement)
+        private void Process(Measurement measurement)
         {
             if (measurmentChangedTracker.IsMeasurementChanged(measurement))
             {

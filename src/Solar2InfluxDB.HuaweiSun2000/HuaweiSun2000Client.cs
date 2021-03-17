@@ -35,6 +35,10 @@ namespace Solar2InfluxDB.HuaweiSun2000
 
         public string Hostname { get; }
 
+        public string Model { get; private set; }
+
+        public string SerialNumber { get; private set; }
+
         public async Task Initialize()
         {
             try
@@ -46,6 +50,9 @@ namespace Solar2InfluxDB.HuaweiSun2000
                 await Connect(address);
 
                 logger.LogInformation($"Connected to {this.GetModel()} with S/N {this.GetSerialNumber()}");
+
+                Model = this.GetModel();
+                SerialNumber = this.GetSerialNumber();
 
                 //logAll();
             }

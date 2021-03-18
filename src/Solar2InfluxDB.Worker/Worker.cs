@@ -1,7 +1,5 @@
 ﻿using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Solar2InfluxDB.HuaweiSun2000;
-using Solar2InfluxDB.InfluxDB;
 using Solar2InfluxDB.Model;
 using System;
 using System.Threading;
@@ -11,34 +9,35 @@ namespace Solar2InfluxDB.Worker
 {
     public class Worker : IHostedService
     {
-        private readonly HuaweiSun2000Client solarClient;
-        private readonly InfluxExportClient influxClient;
+        private readonly IMeasurementReader measurementReader;
+        private readonly IMeasurementWriter measurementWriter;
         private readonly ILogger<Worker> logger;
         private readonly CancellationTokenSource timerSource;
-        private readonly MeasurementChangedTracker measurmentChangedTracker;
+        private readonly TimeSpan Interval;
+        private readonly TimeSpan InitDelayAfterException = TimeSpan.FromSeconds(5);
 
         private Task workerTask;
 
         public Worker(
-            HuaweiSun2000Client solarClient,
-            InfluxExportClient influxClient,
-            MeasurementChangedTracker measurmentChangedTracker,
+            IMeasurementReader measurementReader,
+            IMeasurementWriter measurementWriter,
+            WorkerConfig config,
             ILogger<Worker> logger)
         {
-            this.solarClient = solarClient;
-            this.influxClient = influxClient;
+            this.measurementReader = measurementReader;
+            this.measurementWriter = measurementWriter;
             this.logger = logger;
             timerSource = new CancellationTokenSource();
-            this.measurmentChangedTracker = measurmentChangedTracker;
+            Interval = TimeSpan.FromSeconds(config.IntervalInSeconds);
         }
 
-        async Task IHostedService.StartAsync(CancellationToken cancellationToken)
+        Task IHostedService.StartAsync(CancellationToken cancellationToken)
         {
-            await solarClient.Initialize();
-
             workerTask = Task.Run(() => ProcessMeasurements());
 
             logger.LogInformation("Worker started");
+
+            return Task.CompletedTask;
         }
 
         async Task ProcessMeasurements()
@@ -47,30 +46,29 @@ namespace Solar2InfluxDB.Worker
             {
                 try
                 {
-                    Process(solarClient.GetRatedPower());
-                    Process(solarClient.GetInputPower());
-                    Process(solarClient.GetActivePower());
-                    Process(solarClient.GetReactivePower());
-                    Process(solarClient.GetPowerMeterActivePower());
+                    await measurementReader.Initialize();
+                    await measurementWriter.Initialize();
 
-                    logger.LogDebug("Measurements processed");
+                    while (!timerSource.Token.IsCancellationRequested)
+                    {
+                        var measurementsFromDevices = await measurementReader.ReadMeasurementsFromDevices();
+
+                        foreach (var measurements in measurementsFromDevices)
+                        {
+                            await measurementWriter.Write(measurements);
+                        }
+
+                        logger.LogDebug("Measurements processed");
+
+                        await Task.Delay(Interval, timerSource.Token);
+                    }
                 }
                 catch (Exception e)
                 {
                     logger.LogError(e, $"Process measurement failed: {e.GetBaseException().Message}");
 
-                    await solarClient.Initialize();
+                    await Task.Delay(InitDelayAfterException, timerSource.Token);
                 }
-
-                await Task.Delay(TimeSpan.FromSeconds(5), timerSource.Token);
-            }
-        }
-
-        private void Process(Measurement measurement)
-        {
-            if (measurmentChangedTracker.IsMeasurementChanged(measurement))
-            {
-                influxClient.Write(measurement);
             }
         }
 

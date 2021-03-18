@@ -4,6 +4,6 @@
     {
         public const string ConfigSection = "Worker";
 
-        public int IntervalInSeconds { get; set; }
+        public int IntervalInSeconds { get; set; } = 5;
     }
 }

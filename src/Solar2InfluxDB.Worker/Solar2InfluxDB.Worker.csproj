@@ -13,8 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Solar2InfluxDB.HuaweiSun2000\Solar2InfluxDB.HuaweiSun2000.csproj" />
-    <ProjectReference Include="..\Solar2InfluxDB.InfluxDB\Solar2InfluxDB.InfluxDB.csproj" />
     <ProjectReference Include="..\Solar2InfluxDB.Model\Solar2InfluxDB.Model.csproj" />
   </ItemGroup>
 

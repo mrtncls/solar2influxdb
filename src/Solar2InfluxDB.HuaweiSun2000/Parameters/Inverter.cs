@@ -3,7 +3,7 @@ using System;
 
 namespace Solar2InfluxDB.HuaweiSun2000
 {
-    public static class HuaweiSun2000ClientGetters
+    public static class Inverter
     {
         public static string GetModel(this HuaweiSun2000Client client) => client.GetString(30000, 30);
         public static string GetSerialNumber(this HuaweiSun2000Client client) => client.GetString(30015, 20);
@@ -47,7 +47,6 @@ namespace Solar2InfluxDB.HuaweiSun2000
         public static int GetBatteryChargeAndDischargePower(this HuaweiSun2000Client client) => client.GetInteger(37001);
         public static double GetBatteryCurrentDayChargeCapacity(this HuaweiSun2000Client client) => (double)client.GetUnsignedInteger(37015) / 100;
         public static double GetBatteryCurrentDayDischargeCapacity(this HuaweiSun2000Client client) => (double)client.GetUnsignedInteger(37017) / 100;
-        public static IntegerMeasurement GetPowerMeterActivePower(this HuaweiSun2000Client client) => client.GetMeasurement("powermeter_active_power", client.GetInteger(37113));
         public static ushort GetNumberOfOptimizers(this HuaweiSun2000Client client) => client.GetUnsignedShort(37200);
         public static ushort GetNumberOfOnlineOptimizers(this HuaweiSun2000Client client) => client.GetUnsignedShort(37201);
 

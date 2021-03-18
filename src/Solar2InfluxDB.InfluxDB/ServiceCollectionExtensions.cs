@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Solar2InfluxDB.Model;
 
 namespace Solar2InfluxDB.InfluxDB
 {
@@ -10,6 +11,6 @@ namespace Solar2InfluxDB.InfluxDB
             => services
                 .Configure<InfluxDBConfig>(configuration.GetSection(InfluxDBConfig.ConfigSection))
                 .AddSingleton(serviceProvider => serviceProvider.GetRequiredService<IOptions<InfluxDBConfig>>().Value)
-                .AddSingleton<InfluxExportClient>();
+                .AddSingleton<IMeasurementWriter, InfluxExportClient>();
     }
 }

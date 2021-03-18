@@ -1,13 +1,12 @@
 ﻿using InfluxDB.Client;
-using InfluxDB.Client.Api.Domain;
-using InfluxDB.Client.Writes;
 using Microsoft.Extensions.Logging;
 using Solar2InfluxDB.Model;
 using System;
+using System.Threading.Tasks;
 
 namespace Solar2InfluxDB.InfluxDB
 {
-    public class InfluxExportClient
+    public class InfluxExportClient : IMeasurementWriter
     {
         private readonly ILogger<InfluxExportClient> logger;
         private readonly InfluxDBClient client;
@@ -24,14 +23,18 @@ namespace Solar2InfluxDB.InfluxDB
                 config.RetentionPolicy ?? "autogen");
         }
 
-        public void Write(Measurement measurement)
+        Task IMeasurementWriter.Initialize() => Task.CompletedTask;
+
+        Task IMeasurementWriter.Write(MeasurementCollection measurements)
         {
             using (var writeApi = client.GetWriteApi())
             {
-                writeApi.WritePoint(measurement.ToPointData());
+                writeApi.WritePoint(measurements.ToPointData());
 
-                logger.LogTrace($"Point {measurement.Name} written to InfluxDB");
+                logger.LogDebug($"Collection '{measurements.Name}' written to InfluxDB");
             }
+
+            return Task.CompletedTask;
         }
     }
 }

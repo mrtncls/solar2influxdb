@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Solar2InfluxDB.Model;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -19,10 +20,7 @@ namespace Solar2InfluxDB.HuaweiSun2000
         private readonly TimeSpan ConnectFirstReadExtendDelay = TimeSpan.FromMilliseconds(100);
         private readonly ModbusTcpClient modbusClient;
         private readonly ILogger<HuaweiSun2000Client> logger;
-
-        private string hostname;
-        private string model;
-        private string serialNumber;
+        private readonly HuaweiSun2000Config config;
 
         public HuaweiSun2000Client(HuaweiSun2000Config config, ILogger<HuaweiSun2000Client> logger)
         {
@@ -34,9 +32,14 @@ namespace Solar2InfluxDB.HuaweiSun2000
             };
 
             this.logger = logger;
+            this.config = config;
 
-            hostname = config.Hostname ?? throw new Exception("No HuaweiSun2000 hostname specified");
+            Hostname = config.Hostname ?? throw new Exception("No HuaweiSun2000 hostname specified");
         }
+
+        public string Hostname { get; }
+        public string Model { get; private set; }
+        public string SerialNumber { get; private set; }
 
         async Task IMeasurementReader.Initialize()
         {
@@ -44,14 +47,14 @@ namespace Solar2InfluxDB.HuaweiSun2000
             {
                 IPAddress address = GetIPAddress();
 
-                logger.LogInformation($"Connecting to {hostname} at {address}");
+                logger.LogInformation($"Connecting to {Hostname} at {address}");
 
                 await Connect(address);
 
-                model = this.GetModel();
-                serialNumber = this.GetSerialNumber();
+                Model = this.GetModel();
+                SerialNumber = this.GetSerialNumber();
 
-                logger.LogInformation($"Connected to {model} with S/N {serialNumber}");
+                logger.LogInformation($"Connected to {Model} with S/N {SerialNumber}");
 
                 //logAll();
             }
@@ -61,13 +64,14 @@ namespace Solar2InfluxDB.HuaweiSun2000
             }
         }
 
-        async Task<MeasurementCollection[]> IMeasurementReader.ReadMeasurementsFromDevices()
+        async IAsyncEnumerable<MeasurementCollection> IMeasurementReader.ReadMeasurementsFromDevices()
         {
-            return new[]
+            yield return await this.GetInverterMeasurements();
+
+            if (config.PowerMeter?.ParametersToRead?.Any() ?? false)
             {
-                await GetInverterMeasurements(),
-                await this.GetPowerMeterMeasurements(hostname),
-            };
+                yield return await this.GetPowerMeterMeasurements(config.PowerMeter);
+            }
         }
 
         internal string GetString(int address, int length)
@@ -90,21 +94,6 @@ namespace Solar2InfluxDB.HuaweiSun2000
         internal uint GetUnsignedInteger(int address) => modbusClient.ReadHoldingRegisters<uint>(0, address, 2)[0];
 
         internal int GetInteger(int address) => modbusClient.ReadHoldingRegisters<int>(0, address, 2)[0];
-
-        private Task<MeasurementCollection> GetInverterMeasurements()
-        {
-            return Task.FromResult(
-                new MeasurementCollection(
-                    "inverter",
-                    new[]
-                    {
-                        this.GetActivePower(),
-                        this.GetRatedPower(),
-                    },
-                    ("hostname", hostname),
-                    ("model", model),
-                    ("serialnumber", serialNumber)));
-        }
 
         private void logAll()
         {
@@ -237,11 +226,11 @@ namespace Solar2InfluxDB.HuaweiSun2000
 
         private IPAddress GetIPAddress()
         {
-            IPAddress[] addresses = Dns.GetHostAddresses(hostname);
+            IPAddress[] addresses = Dns.GetHostAddresses(Hostname);
 
             if (!addresses.Any())
             {
-                throw new Exception($"No IP address found for {hostname}");
+                throw new Exception($"No IP address found for {Hostname}");
             }
 
             return addresses.First();

@@ -5,5 +5,12 @@
         public const string ConfigSection = "HuaweiSun2000";
 
         public string Hostname { get; set; }
+
+        public PowerMeterConfig PowerMeter { get; set; }
+    }
+
+    public class PowerMeterConfig
+    {
+        public string[] ParametersToRead { get; set; }
     }
 }

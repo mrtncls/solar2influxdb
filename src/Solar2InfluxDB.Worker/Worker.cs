@@ -51,9 +51,7 @@ namespace Solar2InfluxDB.Worker
 
                     while (!timerSource.Token.IsCancellationRequested)
                     {
-                        var measurementsFromDevices = await measurementReader.ReadMeasurementsFromDevices();
-
-                        foreach (var measurements in measurementsFromDevices)
+                        await foreach (var measurements in measurementReader.ReadMeasurementsFromDevices())
                         {
                             await measurementWriter.Write(measurements);
                         }

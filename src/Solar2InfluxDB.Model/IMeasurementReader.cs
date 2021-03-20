@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Solar2InfluxDB.Model
 {
@@ -6,6 +7,6 @@ namespace Solar2InfluxDB.Model
     {
         Task Initialize();
 
-        Task<MeasurementCollection[]> ReadMeasurementsFromDevices();
+        IAsyncEnumerable<MeasurementCollection> ReadMeasurementsFromDevices();
     }
 }

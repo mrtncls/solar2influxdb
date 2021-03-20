@@ -1,14 +1,16 @@
 ﻿using Solar2InfluxDB.Model;
 using System;
+using System.Threading.Tasks;
 
 namespace Solar2InfluxDB.HuaweiSun2000
 {
-    public static class Inverter
+    internal static class Inverter
     {
         public static string GetModel(this HuaweiSun2000Client client) => client.GetString(30000, 30);
         public static string GetSerialNumber(this HuaweiSun2000Client client) => client.GetString(30015, 20);
         public static string GetProductNumber(this HuaweiSun2000Client client) => client.GetString(30025, 20);
         public static ushort GetModelID(this HuaweiSun2000Client client) => client.GetUnsignedShort(30070);
+
         public static ushort GetNumberOfPVStrings(this HuaweiSun2000Client client) => client.GetUnsignedShort(30071);
         public static ushort GetNumberOfMPPTrackers(this HuaweiSun2000Client client) => client.GetUnsignedShort(30072);
         public static DoubleMeasurement GetRatedPower(this HuaweiSun2000Client client) => client.GetMeasurement("rated_power", (double)client.GetUnsignedInteger(30073) / 1000);
@@ -51,6 +53,21 @@ namespace Solar2InfluxDB.HuaweiSun2000
         public static ushort GetNumberOfOnlineOptimizers(this HuaweiSun2000Client client) => client.GetUnsignedShort(37201);
 
         // TODO optimizer feature data (63) to end
+
+        public static Task<MeasurementCollection> GetInverterMeasurements(this HuaweiSun2000Client client)
+        {
+            return Task.FromResult(
+                new MeasurementCollection(
+                    "Inverter",
+                    new Measurement[]
+                    {
+                        client.GetActivePower(),
+                        client.GetRatedPower(),
+                    },
+                    ("Hostname", client.Hostname),
+                    ("Model", client.Model),
+                    ("Serial number", client.SerialNumber)));
+        }
     }
 
     public static class UnsignedShortExtensions

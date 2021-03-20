@@ -30,7 +30,7 @@ namespace Solar2InfluxDB.HuaweiSun2000
             ["Power C [W]"] = (c, n) => new IntegerMeasurement(n, -c.GetInteger(37136)),
         };
 
-        public static Task<MeasurementCollection> GetPowerMeterMeasurements(this HuaweiSun2000Client client, PowerMeterConfig config)
+        public static Task<MeasurementCollection> GetPowerMeterMeasurements(this HuaweiSun2000Client client, ParameterConfig config)
         {
             var measurements = config.ParametersToRead
                 .Where(p => Parameters.ContainsKey(p))

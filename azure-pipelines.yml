@@ -17,11 +17,11 @@ variables:
   tag: '$(Build.BuildNumber)'
 
 stages:
-- stage: Test
-  displayName: Test
+- stage: Test & build
+  displayName: Run tests & Build image
   jobs:
-  - job: Test
-    displayName: Run tests
+  - job: Test & build
+    displayName: Run tests & Build image
     pool:
       vmImage: ubuntu-latest
     steps:
@@ -30,14 +30,6 @@ stages:
         command: 'test'
         projects: '**/*.Tests.csproj'
         testRunTitle: 'Unittests'
-- stage: Build
-  displayName: Build image
-  jobs:
-  - job: Build
-    displayName: Build and push
-    pool:
-      vmImage: ubuntu-latest
-    steps:
     - task: Docker@2
       inputs:
         containerRegistry: 'Docker hub mrtncls'

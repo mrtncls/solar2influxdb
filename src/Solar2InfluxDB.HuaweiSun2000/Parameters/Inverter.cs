@@ -11,7 +11,20 @@ namespace Solar2InfluxDB.HuaweiSun2000
         public static Dictionary<string, Func<HuaweiSun2000Client, string, IEnumerable<Measurement>>> Parameters = new Dictionary<string, Func<HuaweiSun2000Client, string, IEnumerable<Measurement>>>
         {
             ["Rated power [kW]"] = (c, n) => new[] { new DoubleMeasurement(n, (double)c.GetUnsignedInteger(30073) / 1000) },
+            ["Max power [kW]"] = (c, n) => new[] { new DoubleMeasurement(n, (double)c.GetUnsignedInteger(30075) / 1000) },
+            ["Max apparent power [kVA]"] = (c, n) => new[] { new DoubleMeasurement(n, (double)c.GetUnsignedInteger(30077) / 1000) },
+            ["Max reactive power to grid [kVar]"] = (c, n) => new[] { new DoubleMeasurement(n, (double)c.GetInteger(30079) / 1000) },
+            ["Max apparent power from grid [kVar]"] = (c, n) => new[] { new DoubleMeasurement(n, (double)c.GetInteger(30081) / 1000) },
             ["Input power [kW]"] = (c, n) => new[] { new DoubleMeasurement(n, (double)c.GetUnsignedInteger(32064) / 1000) },
+            ["Voltage AB [V]"] = (c, n) => new[] { new DoubleMeasurement(n, (double)c.GetUnsignedShort(32066) / 10) },
+            ["Voltage BC [V]"] = (c, n) => new[] { new DoubleMeasurement(n, (double)c.GetUnsignedShort(32067) / 10) },
+            ["Voltage CA [V]"] = (c, n) => new[] { new DoubleMeasurement(n, (double)c.GetUnsignedShort(32068) / 10) },
+            ["Voltage A [V]"] = (c, n) => new[] { new DoubleMeasurement(n, (double)c.GetUnsignedShort(32069) / 10) },
+            ["Voltage B [V]"] = (c, n) => new[] { new DoubleMeasurement(n, (double)c.GetUnsignedShort(32070) / 10) },
+            ["Voltage C [V]"] = (c, n) => new[] { new DoubleMeasurement(n, (double)c.GetUnsignedShort(32071) / 10) },
+            ["Current A [V]"] = (c, n) => new[] { new DoubleMeasurement(n, (double)c.GetInteger(32072) / 1000) },
+            ["Current B [V]"] = (c, n) => new[] { new DoubleMeasurement(n, (double)c.GetInteger(32074) / 1000) },
+            ["Current C [V]"] = (c, n) => new[] { new DoubleMeasurement(n, (double)c.GetInteger(32076) / 1000) },
             ["Peak power today [kW]"] = (c, n) => new[] { new DoubleMeasurement(n, (double)c.GetInteger(32078) / 1000) },
             ["Power [kW]"] = (c, n) => new[] { new DoubleMeasurement(n, (double)c.GetInteger(32080) / 1000) },
             ["Reactive power [kVar]"] = (c, n) => new[] { new DoubleMeasurement(n, (double)c.GetInteger(32082) / 1000) },
@@ -20,7 +33,7 @@ namespace Solar2InfluxDB.HuaweiSun2000
             ["Efficiency [%]"] = (c, n) => new[] { new DoubleMeasurement(n, (double)c.GetUnsignedShort(32086) / 100) },
             ["Internal temperature [°C]"] = (c, n) => new[] { new DoubleMeasurement(n, (double)c.GetShort(32087) / 10) },
             ["Insulation resistance [MΩ]"] = (c, n) => new[] { new DoubleMeasurement(n, (double)c.GetUnsignedShort(32088) / 1000) },
-        };
+    };
 
         public static Task<MeasurementCollection> GetInverterMeasurements(this HuaweiSun2000Client client, ParameterConfig config)
         {
@@ -44,23 +57,12 @@ namespace Solar2InfluxDB.HuaweiSun2000
         public static ushort GetModelID(this HuaweiSun2000Client client) => client.GetUnsignedShort(30070);
 
         public static ushort GetNumberOfMPPTrackers(this HuaweiSun2000Client client) => client.GetUnsignedShort(30072);
-        public static double GetMaximumActivePower(this HuaweiSun2000Client client) => (double)client.GetUnsignedInteger(30075) / 1000;
-        public static double GetMaximumApparentPower(this HuaweiSun2000Client client) => (double)client.GetUnsignedInteger(30077) / 1000;
-        public static double GetMaximumReactivePowerToGrid(this HuaweiSun2000Client client) => (double)client.GetInteger(30079) / 1000;
-        public static double GetMaximumReactivePowerFromGrid(this HuaweiSun2000Client client) => (double)client.GetInteger(30081) / 1000;
+        public static ushort GetNumberOfOptimizers(this HuaweiSun2000Client client) => client.GetUnsignedShort(37200);
+        public static ushort GetNumberOfOnlineOptimizers(this HuaweiSun2000Client client) => client.GetUnsignedShort(37201);
+
         public static ushort GetState1(this HuaweiSun2000Client client) => client.GetUnsignedShort(32000);
 
         // TODO state2 (13) till alarm3 (17)
-
-        public static double GetLineVoltageAB(this HuaweiSun2000Client client) => (double)client.GetUnsignedShort(32066) / 10;
-        public static double GetLineVoltageBC(this HuaweiSun2000Client client) => (double)client.GetUnsignedShort(32067) / 10;
-        public static double GetLineVoltageCA(this HuaweiSun2000Client client) => (double)client.GetUnsignedShort(32068) / 10;
-        public static double GetPhaseAVoltage(this HuaweiSun2000Client client) => (double)client.GetUnsignedShort(32069) / 10;
-        public static double GetPhaseBVoltage(this HuaweiSun2000Client client) => (double)client.GetUnsignedShort(32070) / 10;
-        public static double GetPhaseCVoltage(this HuaweiSun2000Client client) => (double)client.GetUnsignedShort(32071) / 10;
-        public static double GetPhaseACurrent(this HuaweiSun2000Client client) => (double)client.GetInteger(32072) / 1000;
-        public static double GetPhaseBCurrent(this HuaweiSun2000Client client) => (double)client.GetInteger(32074) / 1000;
-        public static double GetPhaseCCurrent(this HuaweiSun2000Client client) => (double)client.GetInteger(32076) / 1000;
 
         // TODO Device status (44) to (55)
 
@@ -68,8 +70,6 @@ namespace Solar2InfluxDB.HuaweiSun2000
         public static int GetBatteryChargeAndDischargePower(this HuaweiSun2000Client client) => client.GetInteger(37001);
         public static double GetBatteryCurrentDayChargeCapacity(this HuaweiSun2000Client client) => (double)client.GetUnsignedInteger(37015) / 100;
         public static double GetBatteryCurrentDayDischargeCapacity(this HuaweiSun2000Client client) => (double)client.GetUnsignedInteger(37017) / 100;
-        public static ushort GetNumberOfOptimizers(this HuaweiSun2000Client client) => client.GetUnsignedShort(37200);
-        public static ushort GetNumberOfOnlineOptimizers(this HuaweiSun2000Client client) => client.GetUnsignedShort(37201);
 
         // TODO optimizer feature data (63) to end
     }

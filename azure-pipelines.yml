@@ -17,10 +17,10 @@ variables:
   tag: '$(Build.BuildNumber)'
 
 stages:
-- stage: Test & build
+- stage: TestAndBuild
   displayName: Run tests & Build image
   jobs:
-  - job: Test & build
+  - job: TestAndBuild
     displayName: Run tests & Build image
     pool:
       vmImage: ubuntu-latest

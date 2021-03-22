@@ -55,8 +55,6 @@ namespace Solar2InfluxDB.HuaweiSun2000
                 SerialNumber = this.GetSerialNumber();
 
                 logger.LogInformation($"Connected to {Model} with S/N {SerialNumber}");
-
-                //logAll();
             }
             catch (Exception e)
             {
@@ -69,6 +67,11 @@ namespace Solar2InfluxDB.HuaweiSun2000
             if (config.Inverter?.ParametersToRead?.Any() ?? false)
             {
                 yield return await this.GetInverterMeasurements(config.Inverter);
+            }
+
+            if (config.InverterState?.ParametersToRead?.Any() ?? false)
+            {
+                yield return await this.GetInverterStateMeasurements(config.InverterState);
             }
 
             if (config.PowerMeter?.ParametersToRead?.Any() ?? false)
@@ -102,67 +105,6 @@ namespace Solar2InfluxDB.HuaweiSun2000
         internal uint GetUnsignedInteger(int address) => modbusClient.ReadHoldingRegisters<uint>(0, address, 2)[0];
 
         internal int GetInteger(int address) => modbusClient.ReadHoldingRegisters<int>(0, address, 2)[0];
-
-        //private void logAll()
-        //{
-        //    logger.LogInformation($"GetModel = {this.GetModel()}");
-        //    logger.LogInformation($"GetSerialNumber = {this.GetSerialNumber()}");
-        //    logger.LogInformation($"GetProductNumber = {this.GetProductNumber()}");
-        //    logger.LogInformation($"GetModelID = {this.GetModelID()}");
-        //    logger.LogInformation($"GetNumberOfMPPTrackers = {this.GetNumberOfMPPTrackers()}");
-        //    logger.LogInformation($"GetRatedPower = {this.GetRatedPower()}");
-        //    logger.LogInformation($"GetMaximumActivePower = {this.GetMaximumActivePower()}");
-        //    logger.LogInformation($"GetMaximumApparentPower = {this.GetMaximumApparentPower()}");
-        //    logger.LogInformation($"GetMaximumReactivePowerToGrid = {this.GetMaximumReactivePowerToGrid()}");
-        //    logger.LogInformation($"GetMaximumReactivePowerFromGrid = {this.GetMaximumReactivePowerFromGrid()}");
-
-        //    var state1 = this.GetState1();
-        //    logger.LogInformation($"GetState1.Standby = {state1.IsFlagSet(State1Flags.Standby)}");
-        //    logger.LogInformation($"GetState1.GridConnected = {state1.IsFlagSet(State1Flags.GridConnected)}");
-        //    logger.LogInformation($"GetState1.GridConnectedNormally = {state1.IsFlagSet(State1Flags.GridConnectedNormally)}");
-        //    logger.LogInformation($"GetState1.GridConnectionWithDeratingDueToPowerRationing = {state1.IsFlagSet(State1Flags.GridConnectionWithDeratingDueToPowerRationing)}");
-        //    logger.LogInformation($"GetState1.GridConnectionWithFeratingDueToInternalCausesOfTheSolarInverter = {state1.IsFlagSet(State1Flags.GridConnectionWithFeratingDueToInternalCausesOfTheSolarInverter)}");
-        //    logger.LogInformation($"GetState1.NormalStop = {state1.IsFlagSet(State1Flags.NormalStop)}");
-        //    logger.LogInformation($"GetState1.StopDueToFaults = {state1.IsFlagSet(State1Flags.StopDueToFaults)}");
-        //    logger.LogInformation($"GetState1.StopDueToPowerRationing = {state1.IsFlagSet(State1Flags.StopDueToPowerRationing)}");
-        //    logger.LogInformation($"GetState1.Shutdown = {state1.IsFlagSet(State1Flags.Shutdown)}");
-        //    logger.LogInformation($"GetState1.SpotCheck = {state1.IsFlagSet(State1Flags.SpotCheck)}");
-
-        //    // TODO state2 ....alarm3
-
-        //    var pvString = this.GetNumberOfPVStrings();
-        //    logger.LogInformation($"GetNumberOfPVStrings = {pvString}");
-        //    for (int i = 1; i <= pvString; i++)
-        //    {
-        //        logger.LogInformation($"GetPVVoltage for PV string {i} = {this.GetPVVoltage(i)}");
-        //        logger.LogInformation($"GetPVCurrent for PV string {i} = {this.GetPVCurrent(i)}");
-        //    }
-
-        //    logger.LogInformation($"GetInputPower = {this.GetInputPower()}");
-        //    logger.LogInformation($"GetLineVoltageAB = {this.GetLineVoltageAB()}");
-        //    logger.LogInformation($"GetLineVoltageBC = {this.GetLineVoltageBC()}");
-        //    logger.LogInformation($"GetLineVoltageCA = {this.GetLineVoltageCA()}");
-        //    logger.LogInformation($"GetPhaseAVoltage = {this.GetPhaseAVoltage()}");
-        //    logger.LogInformation($"GetPhaseBVoltage = {this.GetPhaseBVoltage()}");
-        //    logger.LogInformation($"GetPhaseCVoltage = {this.GetPhaseCVoltage()}");
-        //    logger.LogInformation($"GetPhaseACurrent = {this.GetPhaseACurrent()}");
-        //    logger.LogInformation($"GetPhaseBCurrent = {this.GetPhaseBCurrent()}");
-        //    logger.LogInformation($"GetPhaseCCurrent = {this.GetPhaseCCurrent()}");
-        //    logger.LogInformation($"GetPeakActivePowerOfCurrentDay = {this.GetPeakActivePowerOfCurrentDay()}");
-        //    logger.LogInformation($"GetActivePower = {this.GetActivePower()}");
-        //    logger.LogInformation($"GetReactivePower = {this.GetReactivePower()}");
-        //    logger.LogInformation($"GetPowerFactor = {this.GetPowerFactor()}");
-        //    logger.LogInformation($"GetGridFrequency = {this.GetGridFrequency()}");
-        //    logger.LogInformation($"GetEfficiency = {this.GetEfficiency()}");
-        //    logger.LogInformation($"GetInternalTemperature = {this.GetInternalTemperature()}");
-        //    logger.LogInformation($"GetInsulationResistance = {this.GetInsulationResistance()}");
-        //    logger.LogInformation($"GetBatteryRunningStatus = {this.GetBatteryRunningStatus()}");
-        //    logger.LogInformation($"GetBatteryChargeAndDischargePower = {this.GetBatteryChargeAndDischargePower()}");
-        //    logger.LogInformation($"GetBatteryCurrentDayChargeCapacity = {this.GetBatteryCurrentDayChargeCapacity()}");
-        //    logger.LogInformation($"GetBatteryCurrentDayDischargeCapacity = {this.GetBatteryCurrentDayDischargeCapacity()}");
-        //    logger.LogInformation($"GetNumberOfOptimizers = {this.GetNumberOfOptimizers()}");
-        //    logger.LogInformation($"GetNumberOfOnlineOptimizers = {this.GetNumberOfOnlineOptimizers()}");
-        //}
 
         private async Task Connect(IPAddress address)
         {

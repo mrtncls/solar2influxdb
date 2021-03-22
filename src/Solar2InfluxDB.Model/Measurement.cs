@@ -37,4 +37,12 @@
         {
         }
     }
+
+    public class BooleanMeasurement : Measurement<bool>
+    {
+        public BooleanMeasurement(string name, bool value)
+            : base(name, value)
+        {
+        }
+    }
 }

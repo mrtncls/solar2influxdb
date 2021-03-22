@@ -60,8 +60,6 @@ namespace Solar2InfluxDB.HuaweiSun2000
         public static ushort GetNumberOfOptimizers(this HuaweiSun2000Client client) => client.GetUnsignedShort(37200);
         public static ushort GetNumberOfOnlineOptimizers(this HuaweiSun2000Client client) => client.GetUnsignedShort(37201);
 
-        public static ushort GetState1(this HuaweiSun2000Client client) => client.GetUnsignedShort(32000);
-
         // TODO state2 (13) till alarm3 (17)
 
         // TODO Device status (44) to (55)
@@ -72,37 +70,5 @@ namespace Solar2InfluxDB.HuaweiSun2000
         public static double GetBatteryCurrentDayDischargeCapacity(this HuaweiSun2000Client client) => (double)client.GetUnsignedInteger(37017) / 100;
 
         // TODO optimizer feature data (63) to end
-    }
-
-    public static class UnsignedShortExtensions
-    {
-        public static bool IsFlagSet(this ushort value, State1Flags flag)
-        {
-            return (value & (ushort)flag) == (ushort)flag;
-        }
-    }
-
-    public enum BatteryRunningStatus
-    {
-        Offline = 0,
-        Standby = 1,
-        Running = 2,
-        Fault = 3,
-        SleepMode = 4,
-    }
-
-    [Flags]
-    public enum State1Flags
-    {
-        Standby = 0b0000_0000_0000_0001,
-        GridConnected = 0b0000_0000_0000_0010,
-        GridConnectedNormally = 0b0000_0000_0000_0100,
-        GridConnectionWithDeratingDueToPowerRationing = 0b0000_0000_0000_1000,
-        GridConnectionWithFeratingDueToInternalCausesOfTheSolarInverter = 0b0000_0000_0001_0000,
-        NormalStop = 0b0000_0000_0010_0000,
-        StopDueToFaults = 0b0000_0000_0100_000,
-        StopDueToPowerRationing = 0b0000_0000_1000_0000,
-        Shutdown = 0b0000_0001_0000_0000,
-        SpotCheck = 0b0000_0010_0000_0000,
     }
 }

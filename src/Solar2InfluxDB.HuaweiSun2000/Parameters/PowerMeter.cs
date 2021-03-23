@@ -8,7 +8,7 @@ namespace Solar2InfluxDB.HuaweiSun2000
 {
     internal static class PowerMeter
     {
-        public static Dictionary<string, Func<HuaweiSun2000Client, string, Measurement>> Parameters = new Dictionary<string, Func<HuaweiSun2000Client, string, Measurement>>
+        private static Dictionary<string, Func<HuaweiSun2000Client, string, Measurement>> Parameters = new Dictionary<string, Func<HuaweiSun2000Client, string, Measurement>>
         {
             ["Voltage A [V]"] = (c, n) => new DoubleMeasurement(n, (double)c.GetInteger(37101) / 10),
             ["Voltage B [V]"] = (c, n) => new DoubleMeasurement(n, (double)c.GetInteger(37103) / 10),

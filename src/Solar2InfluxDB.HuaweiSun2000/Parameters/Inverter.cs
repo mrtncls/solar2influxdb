@@ -8,7 +8,7 @@ namespace Solar2InfluxDB.HuaweiSun2000
 {
     internal static class Inverter
     {
-        public static Dictionary<string, Func<HuaweiSun2000Client, string, IEnumerable<Measurement>>> Parameters = new Dictionary<string, Func<HuaweiSun2000Client, string, IEnumerable<Measurement>>>
+        private static Dictionary<string, Func<HuaweiSun2000Client, string, IEnumerable<Measurement>>> Parameters = new Dictionary<string, Func<HuaweiSun2000Client, string, IEnumerable<Measurement>>>
         {
             ["Rated power [kW]"] = (c, n) => new[] { new DoubleMeasurement(n, (double)c.GetUnsignedInteger(30073) / 1000) },
             ["Max power [kW]"] = (c, n) => new[] { new DoubleMeasurement(n, (double)c.GetUnsignedInteger(30075) / 1000) },

@@ -8,7 +8,7 @@ namespace Solar2InfluxDB.HuaweiSun2000
 {
     internal static class PVStrings
     {
-        public static Dictionary<string, Func<HuaweiSun2000Client, string, IEnumerable<Measurement>>> Parameters = new Dictionary<string, Func<HuaweiSun2000Client, string, IEnumerable<Measurement>>>
+        private static Dictionary<string, Func<HuaweiSun2000Client, string, IEnumerable<Measurement>>> Parameters = new Dictionary<string, Func<HuaweiSun2000Client, string, IEnumerable<Measurement>>>
         {
             ["Voltage of all PV strings [V]"] = GetVoltageOfAllPVStrings,
             ["Current of all PV strings [A]"] = GetCurrentOfAllPVStrings,
@@ -54,8 +54,8 @@ namespace Solar2InfluxDB.HuaweiSun2000
                     ("Hostname", client.Hostname)));
         }
 
-        public static ushort GetNumberOfPVStrings(this HuaweiSun2000Client client) => client.GetUnsignedShort(30071);
-        public static double GetPVVoltage(this HuaweiSun2000Client client, int PVString) => (double)client.GetShort(32014 + 2 * PVString) / 10;
-        public static double GetPVCurrent(this HuaweiSun2000Client client, int PVString) => (double)client.GetShort(32015 + 2 * PVString) / 100;
+        private static ushort GetNumberOfPVStrings(this HuaweiSun2000Client client) => client.GetUnsignedShort(30071);
+        private static double GetPVVoltage(this HuaweiSun2000Client client, int PVString) => (double)client.GetShort(32014 + 2 * PVString) / 10;
+        private static double GetPVCurrent(this HuaweiSun2000Client client, int PVString) => (double)client.GetShort(32015 + 2 * PVString) / 100;
     }
 }

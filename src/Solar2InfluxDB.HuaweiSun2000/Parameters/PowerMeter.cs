@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Solar2InfluxDB.HuaweiSun2000
+namespace Solar2InfluxDB.HuaweiSun2000.Parameters
 {
     internal static class PowerMeter
     {

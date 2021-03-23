@@ -8,6 +8,8 @@
 
         public ParameterConfig Inverter { get; set; }
 
+        public ParameterConfig InverterAlarm { get; set; }
+
         public ParameterConfig InverterState { get; set; }
 
         public ParameterConfig PowerMeter { get; set; }

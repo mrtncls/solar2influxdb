@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Solar2InfluxDB.HuaweiSun2000
+namespace Solar2InfluxDB.HuaweiSun2000.Parameters
 {
     internal static class InverterState
     {
@@ -81,30 +81,12 @@ namespace Solar2InfluxDB.HuaweiSun2000
         }
     }
 
-    internal static class UnsignedShortExtensions
+    internal static class StateFlagExtensions
     {
-        public static bool IsFlagSet(this ushort value, State1Flags flag)
-        {
-            return (value & (ushort)flag) == (ushort)flag;
-        }
-
-        public static bool IsFlagSet(this ushort value, State2Flags flag)
-        {
-            return (value & (ushort)flag) == (ushort)flag;
-        }
-
-        public static bool IsFlagSet(this ushort value, DeviceStatusFlags flag)
-        {
-            return (value & (ushort)flag) == (ushort)flag;
-        }
-    }
-
-    internal static class UnsignedIntegerExtensions
-    {
-        public static bool IsFlagSet(this uint value, State3Flags flag)
-        {
-            return (value & (uint)flag) == (uint)flag;
-        }
+        public static bool IsFlagSet(this ushort value, State1Flags flag) => (value & (ushort)flag) == (ushort)flag;
+        public static bool IsFlagSet(this ushort value, State2Flags flag) => (value & (ushort)flag) == (ushort)flag;
+        public static bool IsFlagSet(this ushort value, DeviceStatusFlags flag) => (value & (ushort)flag) == (ushort)flag;
+        public static bool IsFlagSet(this uint value, State3Flags flag) => (value & (uint)flag) == (uint)flag;
     }
 
     public enum BatteryRunningStatus

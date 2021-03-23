@@ -1,5 +1,6 @@
 ﻿using FluentModbus;
 using Microsoft.Extensions.Logging;
+using Solar2InfluxDB.HuaweiSun2000.Parameters;
 using Solar2InfluxDB.Model;
 using System;
 using System.Collections.Generic;
@@ -67,6 +68,11 @@ namespace Solar2InfluxDB.HuaweiSun2000
             if (config.Inverter?.ParametersToRead?.Any() ?? false)
             {
                 yield return await this.GetInverterMeasurements(config.Inverter);
+            }
+
+            if (config.InverterAlarm?.ParametersToRead?.Any() ?? false)
+            {
+                yield return await this.GetInverterAlarmMeasurements(config.InverterAlarm);
             }
 
             if (config.InverterState?.ParametersToRead?.Any() ?? false)

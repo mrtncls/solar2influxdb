@@ -11,7 +11,7 @@
         public string Name { get; }
     }
 
-    public abstract class Measurement<TValue> : Measurement where TValue : struct
+    public abstract class Measurement<TValue> : Measurement
     {
         protected Measurement(string name, TValue value)
             : base(name)
@@ -41,6 +41,14 @@
     public class BooleanMeasurement : Measurement<bool>
     {
         public BooleanMeasurement(string name, bool value)
+            : base(name, value)
+        {
+        }
+    }
+
+    public class StringMeasurement : Measurement<string>
+    {
+        public StringMeasurement(string name, string value)
             : base(name, value)
         {
         }

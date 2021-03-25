@@ -26,6 +26,9 @@ namespace Solar2InfluxDB.InfluxDB
                     case BooleanMeasurement booleanMeasurement:
                         point = point.Field(booleanMeasurement.Name, booleanMeasurement.Value);
                         break;
+                    case StringMeasurement stringMeasurement:
+                        point = point.Field(stringMeasurement.Name, stringMeasurement.Value);
+                        break;
                     default:
                         throw new NotImplementedException($"Measurement mapping for {measurement.GetType().Name} not implemented");
                 }

@@ -6,6 +6,8 @@
 
         public string Hostname { get; set; }
 
+        public ParameterConfig Battery { get; set; }
+
         public ParameterConfig Inverter { get; set; }
 
         public ParameterConfig InverterAlarm { get; set; }

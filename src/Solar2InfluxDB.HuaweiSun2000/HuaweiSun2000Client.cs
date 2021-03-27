@@ -65,6 +65,11 @@ namespace Solar2InfluxDB.HuaweiSun2000
 
         async IAsyncEnumerable<MeasurementCollection> IMeasurementReader.ReadMeasurementsFromDevices()
         {
+            if (config.Battery?.ParametersToRead?.Any() ?? false)
+            {
+                yield return await this.GetBatteryMeasurements(config.Battery);
+            }
+
             if (config.Inverter?.ParametersToRead?.Any() ?? false)
             {
                 yield return await this.GetInverterMeasurements(config.Inverter);

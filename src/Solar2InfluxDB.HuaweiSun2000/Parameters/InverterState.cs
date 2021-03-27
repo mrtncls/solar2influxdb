@@ -102,15 +102,6 @@ namespace Solar2InfluxDB.HuaweiSun2000.Parameters
         }
     }
 
-    public enum BatteryRunningStatus
-    {
-        Offline = 0,
-        Standby = 1,
-        Running = 2,
-        Fault = 3,
-        SleepMode = 4,
-    }
-
     [Flags]
     internal enum State1Flags
     {

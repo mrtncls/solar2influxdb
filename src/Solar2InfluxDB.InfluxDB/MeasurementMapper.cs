@@ -23,6 +23,12 @@ namespace Solar2InfluxDB.InfluxDB
                     case IntegerMeasurement integerMeasurement:
                         point = point.Field(integerMeasurement.Name, integerMeasurement.Value);
                         break;
+                    case UnsignedShortMeasurement unsignedShortMeasurement:
+                        point = point.Field(unsignedShortMeasurement.Name, unsignedShortMeasurement.Value);
+                        break;
+                    case UnsignedIntegerMeasurement unsignedIntegerMeasurement:
+                        point = point.Field(unsignedIntegerMeasurement.Name, unsignedIntegerMeasurement.Value);
+                        break;
                     case BooleanMeasurement booleanMeasurement:
                         point = point.Field(booleanMeasurement.Name, booleanMeasurement.Value);
                         break;

@@ -38,6 +38,22 @@
         }
     }
 
+    public class UnsignedShortMeasurement : Measurement<ushort>
+    {
+        public UnsignedShortMeasurement(string name, ushort value)
+            : base(name, value)
+        {
+        }
+    }
+
+    public class UnsignedIntegerMeasurement : Measurement<uint>
+    {
+        public UnsignedIntegerMeasurement(string name, uint value)
+            : base(name, value)
+        {
+        }
+    }
+
     public class BooleanMeasurement : Measurement<bool>
     {
         public BooleanMeasurement(string name, bool value)

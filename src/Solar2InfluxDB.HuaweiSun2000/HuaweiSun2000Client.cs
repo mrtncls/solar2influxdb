@@ -44,23 +44,16 @@ namespace Solar2InfluxDB.HuaweiSun2000
 
         async Task IMeasurementReader.Initialize()
         {
-            try
-            {
-                IPAddress address = GetIPAddress();
+            IPAddress address = GetIPAddress();
 
-                logger.LogInformation($"Connecting to {Hostname} at {address}");
+            logger.LogInformation($"Connecting to {Hostname} at {address}");
 
-                await Connect(address);
+            await Connect(address);
 
-                Model = this.GetModel();
-                SerialNumber = this.GetSerialNumber();
+            Model = this.GetModel();
+            SerialNumber = this.GetSerialNumber();
 
-                logger.LogInformation($"Connected to {Model} with S/N {SerialNumber}");
-            }
-            catch (Exception e)
-            {
-                logger.LogError(e, $"Failed to initialize: {e.GetBaseException().Message}");
-            }
+            logger.LogInformation($"Connected to {Model} with S/N {SerialNumber}");
         }
 
         async IAsyncEnumerable<MeasurementCollection> IMeasurementReader.ReadMeasurementsFromDevices()

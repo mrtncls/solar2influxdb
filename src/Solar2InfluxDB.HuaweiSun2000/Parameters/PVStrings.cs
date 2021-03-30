@@ -44,7 +44,17 @@ namespace Solar2InfluxDB.HuaweiSun2000.Parameters
         {
             var measurements = config.ParametersToRead
                 .Where(p => Parameters.ContainsKey(p))
-                .SelectMany(p => Parameters[p](client, p))
+                .SelectMany(p =>
+                {
+                    try
+                    {
+                        return Parameters[p](client, p);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception($"Reading PV string parameter '{p}' failed", e);
+                    }
+                })
                 .ToArray();
 
             return Task.FromResult(

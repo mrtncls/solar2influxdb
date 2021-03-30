@@ -63,7 +63,17 @@ namespace Solar2InfluxDB.HuaweiSun2000.Parameters
 
             var measurements = config.ParametersToRead
                 .Where(p => Parameters.ContainsKey(p))
-                .Select(p => Parameters[p](alarm1, alarm2, alarm3, p))
+                .Select(p =>
+                {
+                    try
+                    {
+                        return Parameters[p](alarm1, alarm2, alarm3, p);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception($"Reading inverter alarm '{p}' failed", e);
+                    }
+                })
                 .ToArray();
 
             return Task.FromResult(

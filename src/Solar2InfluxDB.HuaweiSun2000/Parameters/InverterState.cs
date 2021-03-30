@@ -73,8 +73,17 @@ namespace Solar2InfluxDB.HuaweiSun2000.Parameters
 
             var measurements = config.ParametersToRead
                 .Where(p => Parameters.ContainsKey(p))
-                .Select(p => Parameters[p](state1, state2, state3, deviceStatus, p))
-                .ToArray();
+                .Select(p =>
+                {
+                    try
+                    {
+                        return Parameters[p](state1, state2, state3, deviceStatus, p);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception($"Reading inverter state '{p}' failed", e);
+                    }
+                }).ToArray();
 
             return Task.FromResult(
                 new MeasurementCollection(

@@ -87,6 +87,11 @@ namespace Solar2InfluxDB.HuaweiSun2000
             {
                 yield return await this.GetPVStringsMeasurements(config.PVStrings);
             }
+
+            if (config.Custom?.Any() ?? false)
+            {
+                yield return await this.GetCustomMeasurements(config.Custom);
+            }
         }
 
         internal string GetString(int address, int length)

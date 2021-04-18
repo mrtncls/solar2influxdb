@@ -36,7 +36,6 @@ namespace Solar2InfluxDB.HuaweiSun2000.Parameters
             ["Forced charging and discharging power [W]"] = (c, n) => new[] { new IntegerMeasurement(n, c.GetInteger(47084)) }, // Static on my setup
 
             // TODO
-
             ["Looks similar to charge/discharge power [?]"] = (c, n) => new[] { new IntegerMeasurement(n, c.GetShort(37021)) }, // Not in docs
             ["? [?]"] = (c, n) => new[] { new IntegerMeasurement(n, c.GetUnsignedShort(37022)) }, // Not in docs
         };

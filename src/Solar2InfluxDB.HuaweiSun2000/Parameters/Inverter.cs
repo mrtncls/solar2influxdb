@@ -36,8 +36,8 @@ namespace Solar2InfluxDB.HuaweiSun2000.Parameters
             ["Fault code"] = (c, n) => new[] { new UnsignedShortMeasurement(n, c.GetUnsignedShort(32090)) },
             ["Startup time"] = (c, n) => new[] { new StringMeasurement(n, DateTimeOffset.FromUnixTimeSeconds(c.GetUnsignedInteger(32091)).DateTime.ToString()) },
             ["Shutdown time"] = (c, n) => new[] { new StringMeasurement(n, DateTimeOffset.FromUnixTimeSeconds(c.GetUnsignedInteger(32093)).DateTime.ToString()) },
-            ["Accumulated energy yield [kWh]"] = (c, n) => new[] { new UnsignedIntegerMeasurement(n, c.GetUnsignedInteger(32106)) },
-            ["Daily energy yield [kWh]"] = (c, n) => new[] { new UnsignedIntegerMeasurement(n, c.GetUnsignedInteger(32114)) },
+            ["Accumulated energy yield [kWh]"] = (c, n) => new[] { new DoubleMeasurement(n, (double)c.GetUnsignedInteger(32106) / 100) },
+            ["Daily energy yield [kWh]"] = (c, n) => new[] { new DoubleMeasurement(n, (double)c.GetUnsignedInteger(32114) / 100) },
         };
 
         public static Task<MeasurementCollection> GetInverterMeasurements(this HuaweiSun2000Client client, ParameterConfig config)

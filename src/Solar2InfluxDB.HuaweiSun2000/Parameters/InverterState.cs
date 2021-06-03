@@ -37,9 +37,9 @@ namespace Solar2InfluxDB.HuaweiSun2000.Parameters
             [0x0002] = "Standby: detecting irradiation",
             [0x0003] = "Standby: grid detecting",
             [0x0100] = "Starting",
-            [0x0200] = "On-grid (Off-grid mode: running)",
-            [0x0201] = "Grid connection: power limited (Off-grid mode: running: power limited)",
-            [0x0202] = "Grid connection: self-derating (Off-grid mode: running: self-derating)",
+            [0x0200] = "Running",
+            [0x0201] = "Power limited",
+            [0x0202] = "Self-derating",
             [0x0300] = "Shutdown: fault",
             [0x0301] = "Shutdown: command",
             [0x0302] = "Shutdown: OVGR",
@@ -60,7 +60,7 @@ namespace Solar2InfluxDB.HuaweiSun2000.Parameters
             [0x0700] = "AFCI self check",
             [0x0800] = "I-V scanning",
             [0x0900] = "DC input detection",
-            [0x0a00] = "Running: off-grid charging",
+            [0x0a00] = "Charging",
             [0xa000] = "Standby: no irradiation",
         };
 

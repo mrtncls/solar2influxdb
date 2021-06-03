@@ -34,7 +34,7 @@ namespace Solar2InfluxDB.HuaweiSun2000.Parameters
 
             for (int i = 1; i <= pvStringsCount; i++)
             {
-                measurements.Add(new DoubleMeasurement($"PS string {i} current [A]", client.GetPVCurrent(i)));
+                measurements.Add(new DoubleMeasurement($"PV string {i} current [A]", client.GetPVCurrent(i)));
             }
 
             return measurements;

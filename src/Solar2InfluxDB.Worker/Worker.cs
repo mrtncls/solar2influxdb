@@ -11,6 +11,7 @@ namespace Solar2InfluxDB.Worker
     {
         private readonly IMeasurementReader measurementReader;
         private readonly IMeasurementWriter measurementWriter;
+        private readonly MeasurementChangedTracker changedTracker;
         private readonly ILogger<Worker> logger;
         private readonly CancellationTokenSource timerSource;
         private readonly TimeSpan Interval;
@@ -22,10 +23,12 @@ namespace Solar2InfluxDB.Worker
             IMeasurementReader measurementReader,
             IMeasurementWriter measurementWriter,
             WorkerConfig config,
+            MeasurementChangedTracker changedTracker,
             ILogger<Worker> logger)
         {
             this.measurementReader = measurementReader;
             this.measurementWriter = measurementWriter;
+            this.changedTracker = changedTracker;
             this.logger = logger;
             timerSource = new CancellationTokenSource();
             Interval = TimeSpan.FromSeconds(config.IntervalInSeconds);
@@ -53,6 +56,8 @@ namespace Solar2InfluxDB.Worker
                     {
                         await foreach (var measurements in measurementReader.ReadMeasurementsFromDevices())
                         {
+                            changedTracker.CalculateAlreadyStored(measurements);
+                            
                             await measurementWriter.Write(measurements);
                         }
 

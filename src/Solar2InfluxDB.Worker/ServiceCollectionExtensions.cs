@@ -10,6 +10,7 @@ namespace Solar2InfluxDB.Worker
             => services
                 .Configure<WorkerConfig>(configuration.GetSection(WorkerConfig.ConfigSection))
                 .AddSingleton(serviceProvider => serviceProvider.GetRequiredService<IOptions<WorkerConfig>>().Value)
+                .AddSingleton<MeasurementChangedTracker>()
                 .AddHostedService<Worker>();
     }
 }

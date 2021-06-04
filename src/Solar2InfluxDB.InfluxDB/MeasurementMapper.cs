@@ -15,28 +15,31 @@ namespace Solar2InfluxDB.InfluxDB
 
             foreach (var measurement in measurements)
             {
-                switch (measurement)
+                if (!measurement.IsAlreadyStored)
                 {
-                    case DoubleMeasurement doubleMeasurement:
-                        point = point.Field(doubleMeasurement.Name, doubleMeasurement.Value);
-                        break;
-                    case IntegerMeasurement integerMeasurement:
-                        point = point.Field(integerMeasurement.Name, integerMeasurement.Value);
-                        break;
-                    case UnsignedShortMeasurement unsignedShortMeasurement:
-                        point = point.Field(unsignedShortMeasurement.Name, unsignedShortMeasurement.Value);
-                        break;
-                    case UnsignedIntegerMeasurement unsignedIntegerMeasurement:
-                        point = point.Field(unsignedIntegerMeasurement.Name, unsignedIntegerMeasurement.Value);
-                        break;
-                    case BooleanMeasurement booleanMeasurement:
-                        point = point.Field(booleanMeasurement.Name, booleanMeasurement.Value);
-                        break;
-                    case StringMeasurement stringMeasurement:
-                        point = point.Field(stringMeasurement.Name, stringMeasurement.Value);
-                        break;
-                    default:
-                        throw new NotImplementedException($"Measurement mapping for {measurement.GetType().Name} not implemented");
+                    switch (measurement)
+                    {
+                        case DoubleMeasurement doubleMeasurement:
+                            point = point.Field(doubleMeasurement.Name, doubleMeasurement.Value);
+                            break;
+                        case IntegerMeasurement integerMeasurement:
+                            point = point.Field(integerMeasurement.Name, integerMeasurement.Value);
+                            break;
+                        case UnsignedShortMeasurement unsignedShortMeasurement:
+                            point = point.Field(unsignedShortMeasurement.Name, unsignedShortMeasurement.Value);
+                            break;
+                        case UnsignedIntegerMeasurement unsignedIntegerMeasurement:
+                            point = point.Field(unsignedIntegerMeasurement.Name, unsignedIntegerMeasurement.Value);
+                            break;
+                        case BooleanMeasurement booleanMeasurement:
+                            point = point.Field(booleanMeasurement.Name, booleanMeasurement.Value);
+                            break;
+                        case StringMeasurement stringMeasurement:
+                            point = point.Field(stringMeasurement.Name, stringMeasurement.Value);
+                            break;
+                        default:
+                            throw new NotImplementedException($"Measurement mapping for {measurement.GetType().Name} not implemented");
+                    }
                 }
             }
 

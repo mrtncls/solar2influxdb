@@ -1,96 +1,119 @@
-//using FluentAssertions;
-//using Solar2InfluxDB.Model;
-//using System.Collections.Generic;
-//using Xunit;
+using FluentAssertions;
+using Solar2InfluxDB.Model;
+using System.Collections.Generic;
+using Xunit;
 
-//namespace Solar2InfluxDB.Worker.Tests
-//{
-//    public class MeasurementTestDoubles
-//    {
-//        public static IEnumerable<object[]> MeasurementsNotChanged => new List<object[]>()
-//        {
-//            new[] 
-//            { 
-//                new DoubleMeasurement("double", 0.154d, ("host", "localhost"), ("model", "XYZ")),
-//                new DoubleMeasurement("double", 0.154d, ("host", "localhost"), ("model", "XYZ")) 
-//            },
-//            new[] 
-//            { 
-//                new IntegerMeasurement("int", 687, ("host", "localhost"), ("model", "XYZ")),
-//                new IntegerMeasurement("int", 687, ("host", "localhost"), ("model", "XYZ")) 
-//            }
-//        };
+namespace Solar2InfluxDB.Worker.Tests
+{
+    public class MeasurementTestDoubles
+    {
+        public static IEnumerable<object[]> MeasurementsNotChanged => new List<object[]>()
+        {
+            new[]
+            {
+                new MeasurementCollection("test", new[] { new DoubleMeasurement("double", 0.154d) }),
+                new MeasurementCollection("test", new[] { new DoubleMeasurement("double", 0.154d) }),
+            },
+            new[]
+            {
+                new MeasurementCollection("test", new[] { new IntegerMeasurement("int", 687) }),
+                new MeasurementCollection("test", new[] { new IntegerMeasurement("int", 687) })
+            },
+            new[]
+            {
+                new MeasurementCollection("test", new[] { new UnsignedShortMeasurement("ushort", 687) }),
+                new MeasurementCollection("test", new[] { new UnsignedShortMeasurement("ushort", 687) })
+            },
+            new[]
+            {
+                new MeasurementCollection("test", new[] { new UnsignedIntegerMeasurement("uint", 687u) }),
+                new MeasurementCollection("test", new[] { new UnsignedIntegerMeasurement("uint", 687u) })
+            },
+            new[]
+            {
+                new MeasurementCollection("test", new[] { new BooleanMeasurement("bool", true) }),
+                new MeasurementCollection("test", new[] { new BooleanMeasurement("bool", true) })
+            },
+            new[]
+            {
+                new MeasurementCollection("test", new[] { new StringMeasurement("string", "hello") }),
+                new MeasurementCollection("test", new[] { new StringMeasurement("string", "hello") })
+            }
+        };
 
-//        public static IEnumerable<object[]> MeasurementsChanged => new List<object[]>()
-//        {
-//            new[] 
-//            { 
-//                new DoubleMeasurement("double", 0.154d, ("host", "localhost"), ("model", "XYZ")),
-//                new DoubleMeasurement("double", 2.789d, ("host", "localhost"), ("model", "XYZ")) 
-//            },
-//            new[] 
-//            { 
-//                new DoubleMeasurement("double", 0.154d, ("host", "localhost"), ("model", "XYZ")),
-//                new DoubleMeasurement("double", 0.154d, ("host", "localhost"), ("model", "XYZ"), ("region", "seaside")) 
-//            },
-//            new[] 
-//            { 
-//                new DoubleMeasurement("double", 0.154d, ("host", "localhost"), ("model", "123")),
-//                new DoubleMeasurement("double", 0.154d, ("host", "localhost"), ("model", "XYZ")) 
-//            },
-//            new[]
-//            {
-//                new IntegerMeasurement("int", 687, ("host", "localhost"), ("model", "XYZ")),
-//                new IntegerMeasurement("int", 84415, ("host", "localhost"), ("model", "XYZ"))
-//            },
-//            new[]
-//            {
-//                new IntegerMeasurement("int", 687, ("host", "localhost"), ("model", "XYZ")),
-//                new IntegerMeasurement("int", 687, ("host", "localhost"), ("model", "TYF"))
-//            },
-//            new[]
-//            {
-//                new IntegerMeasurement("int", 687, ("host", "localhost"), ("model", "XYZ")),
-//                new IntegerMeasurement("int", 687, ("host", "localhost"), ("model", "XYZ"), ("region", "seaside"))
-//            }
-//        };
-//    }
+        public static IEnumerable<object[]> MeasurementsChanged => new List<object[]>()
+        {
+            new[]
+            {
+                new MeasurementCollection("test", new[] { new DoubleMeasurement("double", 0.154d) }),
+                new MeasurementCollection("test", new[] { new DoubleMeasurement("double", 2.789d) })
+            },
+            new[]
+            {
+                new MeasurementCollection("test", new[] { new IntegerMeasurement("int", 687) }),
+                new MeasurementCollection("test", new[] { new IntegerMeasurement("int", 84415) })
+            },
+            new[]
+            {
+                new MeasurementCollection("test", new[] { new UnsignedShortMeasurement("ushort", 687) }),
+                new MeasurementCollection("test", new[] { new UnsignedShortMeasurement("ushort", 124) })
+            },
+            new[]
+            {
+                new MeasurementCollection("test", new[] { new UnsignedIntegerMeasurement("uint", 687u) }),
+                new MeasurementCollection("test", new[] { new UnsignedIntegerMeasurement("uint", 786321u) })
+            },
+            new[]
+            {
+                new MeasurementCollection("test", new[] { new BooleanMeasurement("bool", true) }),
+                new MeasurementCollection("test", new[] { new BooleanMeasurement("bool", false) })
+            },
+            new[]
+            {
+                new MeasurementCollection("test", new[] { new StringMeasurement("string", "hello") }),
+                new MeasurementCollection("test", new[] { new StringMeasurement("string", "ola") })
+            }
+        };
+    }
 
-//    public class MeasurementChangedTrackerTests
-//    {
-//        public MeasurementChangedTrackerTests()
-//        {
-//            ChangedTracker = new MeasurementChangedTracker();
-//        }
+    public class MeasurementChangedTrackerTests
+    {
+        public MeasurementChangedTrackerTests()
+        {
+            ChangedTracker = new MeasurementChangedTracker();
+        }
 
-//        private MeasurementChangedTracker ChangedTracker { get; }
+        private MeasurementChangedTracker ChangedTracker { get; }
 
-//        [Theory]
-//        [MemberData(nameof(MeasurementTestDoubles.MeasurementsNotChanged), MemberType = typeof(MeasurementTestDoubles))]
-//        public void GivenNewMeasurement_WhenCheckingIsChanged_ThenReturnsTrue(Measurement init, Measurement _)
-//        {
-//            ChangedTracker.IsMeasurementChanged(init)
-//                .Should().BeTrue();
-//        }
+        [Theory]
+        [MemberData(nameof(MeasurementTestDoubles.MeasurementsNotChanged), MemberType = typeof(MeasurementTestDoubles))]
+        public void GivenNewMeasurement_WhenCalculateAlreadyStored_ThenNoneIsAlreadyStored(MeasurementCollection init, MeasurementCollection _)
+        {
+            ChangedTracker.CalculateAlreadyStored(init);
 
-//        [Theory]
-//        [MemberData(nameof(MeasurementTestDoubles.MeasurementsChanged), MemberType = typeof(MeasurementTestDoubles))]
-//        public void GivenMeasurementValueChanged_WhenCheckingIsChanged_ThenReturnsTrue(Measurement init, Measurement update)
-//        {
-//            ChangedTracker.IsMeasurementChanged(init);
+            init.Should().NotContain(x => x.IsAlreadyStored);
+        }
 
-//            ChangedTracker.IsMeasurementChanged(update)
-//                .Should().BeTrue();
-//        }
+        [Theory]
+        [MemberData(nameof(MeasurementTestDoubles.MeasurementsChanged), MemberType = typeof(MeasurementTestDoubles))]
+        public void GivenMeasurementValueChanged_WhenCalculateAlreadyStored_ThenNoneIsAlreadyStored(MeasurementCollection init, MeasurementCollection update)
+        {
+            ChangedTracker.CalculateAlreadyStored(init);
 
-//        [Theory]
-//        [MemberData(nameof(MeasurementTestDoubles.MeasurementsNotChanged), MemberType = typeof(MeasurementTestDoubles))]
-//        public void GivenMeasurementValueNotChanged_WhenCheckingIsChanged_ThenReturnsFalse(Measurement init, Measurement update)
-//        {
-//            ChangedTracker.IsMeasurementChanged(init);
+            ChangedTracker.CalculateAlreadyStored(update);
 
-//            ChangedTracker.IsMeasurementChanged(update)
-//                .Should().BeFalse();
-//        }
-//    }
-//}
+            update.Should().NotContain(x => x.IsAlreadyStored);
+        }
+
+        [Theory]
+        [MemberData(nameof(MeasurementTestDoubles.MeasurementsNotChanged), MemberType = typeof(MeasurementTestDoubles))]
+        public void GivenMeasurementValueNotChanged_WhenCalculateAlreadyStored_ThenIsAlreadyStored(MeasurementCollection init, MeasurementCollection update)
+        {
+            ChangedTracker.CalculateAlreadyStored(init);
+
+            ChangedTracker.CalculateAlreadyStored(update);
+
+            update.Should().NotContain(x => !x.IsAlreadyStored);
+        }
+    }
+}

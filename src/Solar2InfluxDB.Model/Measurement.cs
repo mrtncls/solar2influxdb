@@ -1,4 +1,6 @@
-﻿namespace Solar2InfluxDB.Model
+﻿using System.Collections.Generic;
+
+namespace Solar2InfluxDB.Model
 {
 
     public abstract class Measurement
@@ -9,6 +11,12 @@
         }
 
         public string Name { get; }
+
+        public bool IsAlreadyStored { get; private set; }
+
+        public void MarkAsAlreadyStored() => IsAlreadyStored = true;
+
+        public abstract bool IsDifferent(Measurement measurement);
     }
 
     public abstract class Measurement<TValue> : Measurement
@@ -20,6 +28,13 @@
         }
 
         public TValue Value { get; }
+
+        public override bool IsDifferent(Measurement measurement)
+        {
+            var m = measurement as Measurement<TValue>;
+
+            return m == null || !EqualityComparer<TValue>.Default.Equals(Value, m.Value);
+        }
     }
 
     public class DoubleMeasurement : Measurement<double>

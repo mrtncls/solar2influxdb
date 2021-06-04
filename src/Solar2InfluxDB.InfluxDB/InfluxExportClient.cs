@@ -36,21 +36,26 @@ namespace Solar2InfluxDB.InfluxDB
 
         Task IMeasurementWriter.Write(MeasurementCollection measurements)
         {
-            using (var writeApi = client.GetWriteApi())
-            {
-                if (config.V1)
-                {
-                    writeApi.WritePoint(measurements.ToPointData());
-                }
-                else
-                {
-                    writeApi.WritePoint(
-                        config.Bucket,
-                        config.Organization,
-                        measurements.ToPointData());
-                }
+            var point = measurements.ToPointData();
 
-                logger.LogDebug($"Collection '{measurements.Name}' written to InfluxDB");
+            if (point.HasFields())
+            {
+                using (var writeApi = client.GetWriteApi())
+                {
+                    if (config.V1)
+                    {
+                        writeApi.WritePoint(point);
+                    }
+                    else
+                    {
+                        writeApi.WritePoint(
+                            config.Bucket,
+                            config.Organization,
+                            point);
+                    }
+
+                    logger.LogDebug($"Collection '{measurements.Name}' written to InfluxDB");
+                }
             }
 
             return Task.CompletedTask;
